@@ -113,11 +113,19 @@ else:
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config("REDIS_URL", default="redis://localhost:6379/1"),
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        "LOCATION": config(
+            "REDIS_URL",
+            default="redis://localhost:6379/1"
+        ),
+        "OPTIONS": {
+            "CLIENT_CLASS":
+                "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "ssl_cert_reqs": None
+            }
+        },
     }
 }
-
 # Celery
 CELERY_BROKER_URL = config("REDIS_URL", default="redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = config("REDIS_URL", default="redis://localhost:6379/0")
@@ -177,8 +185,33 @@ SPECTACULAR_SETTINGS = {
 import dj_database_url
 
 if not DEBUG:
-    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600, conn_health_checks=True)
-    ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
-    CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='').split(',')
+    DATABASES["default"] = dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+
+    ALLOWED_HOSTS = config(
+        "ALLOWED_HOSTS",
+        default=".onrender.com"
+    ).split(",")
+
+    CORS_ALLOWED_ORIGINS = config(
+        "CORS_ALLOWED_ORIGINS",
+        default="http://localhost:3000,http://localhost:5173"
+    ).split(",")
+
+
+# WhiteNoise (Django 5 safe)
+MIDDLEWARE.insert(
+    1,
+    "whitenoise.middleware.WhiteNoiseMiddleware"
+)
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": (
+            "whitenoise.storage."
+            "CompressedManifestStaticFilesStorage"
+        ),
+    },
+}

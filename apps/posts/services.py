@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from django.db import transaction
 from django.core.cache import cache
 from django.contrib.auth import get_user_model
@@ -5,7 +8,10 @@ from django.contrib.auth import get_user_model
 from .models import Post, Comment, Like, Bookmark
 from apps.notifications.services import NotificationService
 
-User = get_user_model()
+if TYPE_CHECKING:
+    from django.contrib.auth.models import AbstractBaseUser as User
+else:
+    User = get_user_model()
 
 VIEW_COUNT_CACHE_TTL = 60 * 5  # 5 minutes before flushing to DB
 
