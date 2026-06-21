@@ -79,7 +79,7 @@ class PostWriteSerializer(TaggitSerializer, serializers.ModelSerializer):
         tags = validated_data.pop("tags", [])
         post = Post.objects.create(**validated_data)
         if tags:
-            post.tags.set(*tags)
+            post.tags.set(tags)
         return post
 
     def update(self, instance, validated_data):
@@ -93,7 +93,7 @@ class PostWriteSerializer(TaggitSerializer, serializers.ModelSerializer):
 
         instance.save()
         if tags is not None:
-            instance.tags.set(*tags)
+            instance.tags.set(tags)
         return instance
 
 
