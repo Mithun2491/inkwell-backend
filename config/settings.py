@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 from decouple import config
 import dj_database_url
 
@@ -93,6 +94,8 @@ INSTALLED_APPS = (
     + THIRD_PARTY_APPS
     + LOCAL_APPS
 )
+
+INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
 
 # ─────────────────────────────────────────────────────────────
@@ -326,4 +329,21 @@ SPECTACULAR_SETTINGS = {
         "A developer blog platform like Medium",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+import cloudinary
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }
