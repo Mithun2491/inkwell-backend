@@ -74,6 +74,8 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    "cloudinary_storage",
+    "cloudinary",
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
@@ -94,8 +96,6 @@ INSTALLED_APPS = (
     + THIRD_PARTY_APPS
     + LOCAL_APPS
 )
-
-INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
 
 # ─────────────────────────────────────────────────────────────
@@ -228,19 +228,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-
-
-# Django 5 WhiteNoise
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND":
-            "whitenoise.storage."
-            "CompressedManifestStaticFilesStorage",
-    },
-}
 
 
 DEFAULT_AUTO_FIELD = (
